@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -51,13 +53,13 @@ public class SwerveModule {
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
         wheelAngleEncoder = new CANCoder(wheelAngleEncoderId);
-        /* 
+        
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.sensorCoefficient = 2 * Math.PI / 4096.0;
         config.unitString = "rad";
         config.sensorTimeBase = SensorTimeBase.PerSecond;
         wheelAngleEncoder.configAllSettings(config);
-        */
+    
         wheelAngleEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 250);
         resetEncoders();
     }
