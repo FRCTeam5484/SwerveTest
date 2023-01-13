@@ -82,7 +82,6 @@ public class SwerveModule {
 
     public double getWheelAngleEncoderRad(){
         double angle = wheelAngleEncoder.getAbsolutePosition();
-        angle *= 2.0 * Math.PI;
         angle -= wheelAngleEncoderOffsetRad;
         return angle * (wheelAngleEncoderReversed ? -1.0 : 1.0);
     }
