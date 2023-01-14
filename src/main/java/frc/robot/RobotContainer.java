@@ -1,29 +1,35 @@
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.cmdDrive_TeleOp;
+import frc.robot.commands.SwerveAuto;
+import frc.robot.commands.SwerveJoystickDefaultCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
-  private final SwerveSubsystem swerveSubSystem = new SwerveSubsystem();
-  private final XboxController driverOne = new XboxController(OIConstants.kDriverOneControllerPort);
-  public RobotContainer() {
-    swerveSubSystem.setDefaultCommand(new cmdDrive_TeleOp(
-      swerveSubSystem, 
-      () -> driverOne.getLeftX(), 
-      () -> driverOne.getLeftY(), 
-      () -> driverOne.getRightX(), 
-      () -> true));
-      
-    configureBindings();
-  }
 
-  private void configureBindings() {}
+    private final SwerveSubsystem swerveSubsystem;
+    private final SwerveAuto autoCmd;
+    private final XboxController m_joy0 = new XboxController(0);
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
-  }
+    public RobotContainer() {
+        swerveSubsystem = new SwerveSubsystem();
+        swerveSubsystem.setDefaultCommand(new SwerveJoystickDefaultCmd(swerveSubsystem, m_joy0));
+        autoCmd = new SwerveAuto(swerveSubsystem);
+        configureButtonBindings();
+    }
+
+    private void configureButtonBindings() {
+        
+    }
+
+    public SwerveSubsystem getSwerve() {
+        return swerveSubsystem;
+    }
+
+    public Command getAutonomousCommand() {
+        return autoCmd;
+    }
 }
