@@ -1,11 +1,5 @@
 package frc.robot.subsystems;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,18 +11,22 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ModuleConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
-    public static final double MAX_VOLTAGE = 12.0; // cap to reduce speed (RIP REDLINE)
-    public boolean isTank = false;
-    //CREATE SwerveModules
+    public static final double MAX_VOLTAGE = 12.0;
     public final SwerveModule frontLeft;
     public final SwerveModule frontRight;
     public final SwerveModule backLeft;
     public final SwerveModule backRight;
 
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(0), new SwerveModulePosition[] {
+        new SwerveModulePosition(0, new Rotation2d(0)), 
+        new SwerveModulePosition(0, new Rotation2d(0)),
+        new SwerveModulePosition(0, new Rotation2d(0)), 
+        new SwerveModulePosition(0, new Rotation2d(0))
+      });
 
     public SwerveSubsystem() {
         frontLeft = new SwerveModule(
@@ -66,8 +64,8 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightDriveAbsoluteEncoderPort,
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
-        // if robot loop dies, look here for potential threading conflicts.
-        new Thread(() -> { // delays navX recalibration by 1s as it will be busy recalibrating, placed on a new thread to prevent interruption
+        
+        new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 zeroHeading();
@@ -77,21 +75,8 @@ public class SwerveSubsystem extends SubsystemBase {
         }).start();
     }
 
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(0), new SwerveModulePosition[] {
-        new SwerveModulePosition(0, new Rotation2d(0)), 
-        new SwerveModulePosition(0, new Rotation2d(0)),
-        new SwerveModulePosition(0, new Rotation2d(0)), 
-        new SwerveModulePosition(0, new Rotation2d(0))
-      }); //estimates robot's pos on field
-
     public void zeroHeading() {
         gyro.reset();
-    }
-
-    public void switchTank() {
-        // TODO put shuffleboard indicator here.
-        isTank = !isTank;
-        //System.out.println("switched");
     }
 
     public double getHeading() {
@@ -104,10 +89,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Pose2d getPose() {
         return odometer.getPoseMeters();
-    }
-
-    public void resetOdometry(Pose2d pose) {
-        //odometer.resetPosition(pose, getRotation2d());
     }
 
     @Override
@@ -132,12 +113,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond); //scales all speeds down instead of truncating them if over max
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         frontLeft.setDesiredState(desiredStates[0]);
-        if(!isTank) {
-            System.out.println("Front Left Drive: " + frontLeft.getDrivePower());
-            System.out.println("Front Left Turn: " + frontLeft.getTurnPower());
-        }
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
