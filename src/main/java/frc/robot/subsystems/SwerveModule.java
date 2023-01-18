@@ -99,7 +99,7 @@ public class SwerveModule {
         state = SwerveModuleState.optimize(state, getState().angle);
         double driveSpeed = state.speedMetersPerSecond*0.5;
         driveMotor.set(driveSpeed);
-        double turnSpeed = (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getDegrees()))*0.2;
+        double turnSpeed = (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getDegrees()))*0.25;
         turningMotor.set(turnSpeed);
         System.out.println(ModuleName + "- DriveMotorCommand: " + driveSpeed + " - True Angle: " + getAbsoluteEncoderRad() + " AngleSetPoint: " + state.angle.getDegrees() + " AngleMotorCommand: " + turnSpeed);
     }
