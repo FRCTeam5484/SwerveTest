@@ -97,10 +97,11 @@ public class SwerveModule {
             return;
         }
         state = SwerveModuleState.optimize(state, getState().angle);
-        driveMotor.set(state.speedMetersPerSecond);
-        double turnSpeed = (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getDegrees()))/20;
+        double driveSpeed = state.speedMetersPerSecond*0.5;
+        driveMotor.set(driveSpeed);
+        double turnSpeed = (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getDegrees()))*0.2;
         turningMotor.set(turnSpeed);
-        System.out.println(ModuleName + "- DriveMotorCommand: " + state.speedMetersPerSecond + " - True Angle: " + getAbsoluteEncoderRad() + " AngleSetPoint: " + state.angle.getDegrees() + " AngleMotorCommand: " + turnSpeed);
+        System.out.println(ModuleName + "- DriveMotorCommand: " + driveSpeed + " - True Angle: " + getAbsoluteEncoderRad() + " AngleSetPoint: " + state.angle.getDegrees() + " AngleMotorCommand: " + turnSpeed);
     }
 
     public void stop() {
