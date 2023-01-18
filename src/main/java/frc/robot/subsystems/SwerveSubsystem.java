@@ -25,37 +25,41 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveSubsystem() {
         frontLeft = new SwerveModule(
+            "Front Left",
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
-            DriveConstants.kFrontLeftDriveEncoderReversed,
-            DriveConstants.kFrontLeftTurningEncoderReversed,
+            DriveConstants.kFrontLeftDriveMotorReversed,
+            DriveConstants.kFrontLeftTurningMotorReversed,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
         frontRight = new SwerveModule(
+            "Front Right",
             DriveConstants.kFrontRightDriveMotorPort,
             DriveConstants.kFrontRightTurningMotorPort,
-            DriveConstants.kFrontRightDriveEncoderReversed,
-            DriveConstants.kFrontRightTurningEncoderReversed,
+            DriveConstants.kFrontRightDriveMotorReversed,
+            DriveConstants.kFrontRightTurningMotorReversed,
             DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
             DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
         backLeft = new SwerveModule(
+            "Back Left",
             DriveConstants.kBackLeftDriveMotorPort,
             DriveConstants.kBackLeftTurningMotorPort,
-            DriveConstants.kBackLeftDriveEncoderReversed,
-            DriveConstants.kBackLeftTurningEncoderReversed,
+            DriveConstants.kBackLeftDriveMotorReversed,
+            DriveConstants.kBackLeftTurningMotorReversed,
             DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
             DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
 
         backRight = new SwerveModule(
+            "Back Right",
             DriveConstants.kBackRightDriveMotorPort,
             DriveConstants.kBackRightTurningMotorPort,
-            DriveConstants.kBackRightDriveEncoderReversed,
-            DriveConstants.kBackRightTurningEncoderReversed,
+            DriveConstants.kBackRightDriveMotorReversed,
+            DriveConstants.kBackRightTurningMotorReversed,
             DriveConstants.kBackRightDriveAbsoluteEncoderPort,
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
@@ -96,11 +100,11 @@ public class SwerveSubsystem extends SubsystemBase {
             backLeft.getPosition(), backRight.getPosition()
           });
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putNumber("Front Left Wheel Angle", frontLeft.getAbsoluteEncoderRad());
+        SmartDashboard.putNumber("Front Right Wheel Angle", frontRight.getAbsoluteEncoderRad());
+        SmartDashboard.putNumber("Back Left Wheel Angle", backLeft.getAbsoluteEncoderRad());
+        SmartDashboard.putNumber("Back Right Wheel Angle", backRight.getAbsoluteEncoderRad());
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-        SmartDashboard.putNumber("Front Left Encoder", frontLeft.getTurningPosition());
-        SmartDashboard.putNumber("Front Right Encoder", frontRight.getTurningPosition());
-        SmartDashboard.putNumber("Back Left Encoder", backLeft.getTurningPosition());
-        SmartDashboard.putNumber("Back Right Encoder", backRight.getTurningPosition());
     }
 
     public void stopModules() {

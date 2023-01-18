@@ -7,11 +7,10 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
-    private final SwerveSubsystem swerveSubsystem;
+    private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();;
     private final XboxController driverOne = new XboxController(0);
 
     public RobotContainer() {
-        swerveSubsystem = new SwerveSubsystem();
         swerveSubsystem.setDefaultCommand(new SwerveJoystickDefaultCmd(swerveSubsystem, driverOne));
         configureButtonBindings();
     }

@@ -1,5 +1,9 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix.sensors.CANCoder;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -24,16 +28,16 @@ public class SwerveJoystickDefaultCmd extends CommandBase {
 
     @Override
     public void execute() {
-        double xSpeed = controller.getLeftX() * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        double xSpeed = -controller.getLeftY() * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
 
-        double ySpeed = controller.getLeftY() * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        double ySpeed = controller.getLeftX() * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
         
-        double turningSpeed = controller.getRightX() * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        double turningSpeed = -controller.getRightX() * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
         
-        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, Rotation2d.fromDegrees(swerveSubsystem.getHeading()));
         swerveSubsystem.setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds));
     }
 
