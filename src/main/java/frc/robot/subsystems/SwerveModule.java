@@ -14,7 +14,6 @@ import frc.robot.Constants.ModuleConstants;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.fasterxml.jackson.databind.node.BooleanNode;
 
 public class SwerveModule {
     public final CANSparkMax driveMotor;
@@ -64,7 +63,7 @@ public class SwerveModule {
 
     private void configureMotor(CANSparkMax motor, Boolean inverted) {
         motor.restoreFactoryDefaults();
-        motor.setIdleMode(IdleMode.kCoast);
+        motor.setIdleMode(IdleMode.kBrake);
         motor.setInverted(inverted);
         motor.setSmartCurrentLimit(40);
         motor.burnFlash();
@@ -97,11 +96,11 @@ public class SwerveModule {
             return;
         }
         state = SwerveModuleState.optimize(state, getState().angle);
-        double driveSpeed = state.speedMetersPerSecond*0.5;
+        double driveSpeed = state.speedMetersPerSecond*0.2;
         driveMotor.set(driveSpeed);
-        double turnSpeed = (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getDegrees()))*0.25;
+        double turnSpeed = (turningPidController.calculate(getAbsoluteEncoderRad(), state.angle.getDegrees()))/20;
         turningMotor.set(turnSpeed);
-        System.out.println(ModuleName + "- DriveMotorCommand: " + driveSpeed + " - True Angle: " + getAbsoluteEncoderRad() + " AngleSetPoint: " + state.angle.getDegrees() + " AngleMotorCommand: " + turnSpeed);
+        //System.out.println(ModuleName + "- DriveMotorCommand: " + driveSpeed + " - True Angle: " + getAbsoluteEncoderRad() + " AngleSetPoint: " + state.angle.getDegrees() + " AngleMotorCommand: " + turnSpeed);
     }
 
     public void stop() {
